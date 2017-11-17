@@ -2,6 +2,7 @@
 package oscarmat.kth.id1212.hangman.server.controller;
 
 import oscarmat.kth.id1212.hangman.server.model.Game;
+import oscarmat.kth.id1212.hangman.server.model.GameOverException;
 import oscarmat.kth.id1212.hangman.server.model.GameState;
 
 /**
@@ -12,6 +13,7 @@ import oscarmat.kth.id1212.hangman.server.model.GameState;
 public class ClientController {
     
     private Game game;
+    private int score;
     private final String[] wordList;
     
     /**
@@ -21,14 +23,33 @@ public class ClientController {
      */
     public ClientController(String[] wordList) {
         this.wordList = wordList;
+        score = 0;
     }
-    
+
+    /**
+     * @return The current state of the game.
+     */
+    public GameState getGameState() {
+        return game;
+    }
+
+    /**
+     * @return User score based on wins/losses.
+     */
+    public int getScore() {
+        return score;
+    }
+
     /**
      * Create a new game instance with a new random word from the
      * word list.
+     * @return State of the new game.
      */
-    public void newGame() {
-        game = new Game(wordList);
+    public GameState newGame() {
+        if(game != null && !game.isGameOver()) {
+            score--;
+        }
+        return game = new Game(wordList);
     }
     
     /**
@@ -36,7 +57,11 @@ public class ClientController {
      * @param guess The guessed letter.
      * @return The updated state of the game.
      */
-    public GameState play(char guess) {
+    public GameState play(char guess) throws GameOverException {
+        if(game.isGameOver()) {
+            if(game.isGameWon()) score++;
+            else if(game.isGameLost()) score--;
+        }
         return game.play(guess);
     }
     

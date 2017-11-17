@@ -39,8 +39,8 @@ public class HeartComponent extends Pane {
             throw new UncheckedIOException(e);
         }
 
-        heart = new Image("oscarmat/kth/id1212/hangman/client/resources/heart.png");
-        deadHeart = new Image("oscarmat/kth/id1212/hangman/client/resources/deadheart.png");
+        heart = new Image("oscarmat/kth/id1212/hangman/client/view/resources/heart.png");
+        deadHeart = new Image("oscarmat/kth/id1212/hangman/client/view/resources/deadheart.png");
 
         dead = new SimpleBooleanProperty(this, "Dead");
 

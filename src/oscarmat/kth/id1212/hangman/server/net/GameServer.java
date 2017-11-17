@@ -9,31 +9,31 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import oscarmat.kth.id1212.hangman.server.controller.ServerController;
 
 /**
- *
+ * Starts a server which picks up clients connecting
+ * to the server sockets and handles them on a new thread.
  * @author oscar
  */
 public class GameServer {
 
-    private final ServerController controller;
     private final String[] wordList;
-    private final List<ClientHandler> clients;
-    
+
     public GameServer(String[] wordList) {
-        controller = new ServerController();
         this.wordList = wordList;
-        clients = new ArrayList<>();
     }
 
+    /**
+     * Start the server.
+     * @param port Port to use for the server.
+     */
     public void start(int port) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Server has started.");
             while (true) {
                 Socket clientSocket = serverSocket.accept();
+                System.out.println(clientSocket.getInetAddress().getHostAddress() + " has connected.");
                 startHandler(clientSocket);
             }
         } catch (IOException e) {
@@ -41,15 +41,14 @@ public class GameServer {
         }
     }
 
+    /**
+     * Launch a handler for a client in a new thread.
+     * @param clientSocket Socket of the client.
+     */
     private void startHandler(Socket clientSocket) {
         ClientHandler handler = new ClientHandler(this, clientSocket, wordList);
-        clients.add(handler);
         Thread thread = new Thread(handler);
         thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
-    }
-    
-    void updateLeaderboard(String name, int score) {
-        
     }
 }

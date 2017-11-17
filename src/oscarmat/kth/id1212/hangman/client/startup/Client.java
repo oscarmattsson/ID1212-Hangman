@@ -10,16 +10,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import oscarmat.kth.id1212.hangman.client.controller.GameController;
+import oscarmat.kth.id1212.hangman.client.net.NetHandler;
 
 /**
  *
  * @author oscar
  */
-public class Hangman extends Application {
+public class Client extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/oscarmat/kth/id1212/hangman/client/view/Hangman.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/oscarmat/kth/id1212/hangman/client/view/Game.fxml"));
+
+        NetHandler net = new NetHandler("127.0.0.1", 1337);
+        GameController controller = new GameController(net);
+
+        loader.setController(controller);
+        Parent root = loader.load();
         
         Scene scene = new Scene(root);
 

@@ -7,39 +7,47 @@ package oscarmat.kth.id1212.hangman.client.controller;
 
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import oscarmat.kth.id1212.hangman.client.net.NetHandler;
 import oscarmat.kth.id1212.hangman.client.view.components.HeartComponent;
+import oscarmat.kth.id1212.hangman.common.Message;
 
 /**
  *
  * @author oscar
  */
-public class HangmanController implements Initializable {
+public class GameController implements Initializable {
 
     @FXML private HBox heartBox;
+    @FXML private Button guessLetterButton;
+    @FXML private Button guessWordButton;
 
     HeartComponent[] hearts;
     NetHandler net;
 
-    public HangmanController(NetHandler net) {
+    public GameController(NetHandler net) {
         this.net = net;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        HeartComponent heart = new HeartComponent();
-        heartBox.getChildren().add(heart);
-        HeartComponent deadHeart = new HeartComponent();
-        heartBox.getChildren().add(deadHeart);
-        deadHeart.setDeadProperty(true);
+        guessLetterButton.setOnAction(this::guessLetter);
+        guessWordButton.setOnAction(this::guessWord);
+    }
 
+    private void guessLetter(ActionEvent event) {
+        Message message = net.play();
+        System.out.println(message.getType());
+    }
 
+    private void guessWord(ActionEvent event) {
+        System.out.println("there");
     }
 
 }
