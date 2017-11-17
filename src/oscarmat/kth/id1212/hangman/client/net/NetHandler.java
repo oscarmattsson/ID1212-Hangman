@@ -30,7 +30,7 @@ public class NetHandler {
         return send(builder.newGame());
     }
 
-    public Message guessLetter(char letter) {
+    public Message<Message[]> guessLetter(char letter) {
         return send(builder.play(letter));
     }
 

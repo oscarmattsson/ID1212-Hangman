@@ -9,10 +9,15 @@ package oscarmat.kth.id1212.hangman.client.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import oscarmat.kth.id1212.hangman.client.net.NetHandler;
 import oscarmat.kth.id1212.hangman.client.view.components.HeartComponent;
@@ -27,6 +32,10 @@ public class GameController implements Initializable {
     @FXML private HBox heartBox;
     @FXML private Button guessLetterButton;
     @FXML private Button guessWordButton;
+    @FXML private TextField guessLetterField;
+    @FXML private TextField guessWordField;
+    @FXML private Label scoreLabel;
+    @FXML private Label wordLabel;
 
     HeartComponent[] hearts;
     NetHandler net;
@@ -41,13 +50,35 @@ public class GameController implements Initializable {
         guessWordButton.setOnAction(this::guessWord);
     }
 
+    /**
+     * Guess a letter in the word.
+     * @param event Triggered by action on guess letter button.
+     */
     private void guessLetter(ActionEvent event) {
-        Message message = net.play();
-        System.out.println(message.getType());
+        Task<Message<Message[]>> task = new Task<Message<Message[]>>() {
+
+            @Override
+            protected Message<Message[]> call() throws Exception {
+                char c = guessLetterField.getText().charAt(0);
+                return net.guessLetter(c);
+            }
+        };
+        task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                updateState(task.getValue());
+            }
+        });
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
     private void guessWord(ActionEvent event) {
         System.out.println("there");
+    }
+
+    private void updateState(Message<Message[]> message) {
+
     }
 
 }
