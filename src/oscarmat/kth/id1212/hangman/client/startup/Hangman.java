@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package oscarmat.kth.id1212.hangman.client.view;
+package oscarmat.kth.id1212.hangman.client.startup;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,11 +19,14 @@ public class Hangman extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("Hangman.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/oscarmat/kth/id1212/hangman/client/view/Hangman.fxml"));
         
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
+        stage.setMinHeight(400);
+        stage.setMinWidth(600);
+
         stage.show();
     }
 

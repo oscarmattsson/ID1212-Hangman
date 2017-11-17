@@ -1,0 +1,1 @@
+Main-Class: oscarmat.kth.id1212.hangman.client.startup.Hangman.class

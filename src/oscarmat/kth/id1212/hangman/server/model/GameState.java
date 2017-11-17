@@ -29,12 +29,12 @@ public interface GameState {
     /**
      * @return true if the game has been won, false otherwise.
      */
-    public boolean isGameWon();
+    public boolean isGameWon() throws GameNotOverException;
     
     /**
      * @return true if the game has been lost, false otherwise. 
      */
-    public boolean isGameLost();
+    public boolean isGameLost() throws GameNotOverException;
     
     /**
      * @return true if the game is either won or lost, false otherwise.

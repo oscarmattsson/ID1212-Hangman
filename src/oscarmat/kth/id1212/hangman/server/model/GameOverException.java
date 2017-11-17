@@ -10,13 +10,9 @@ package oscarmat.kth.id1212.hangman.server.model;
  * which is already finished.
  * @author oscar
  */
-public class GameOverException extends Exception {
-    
-    /**
-     * 
-     * @param msg 
-     */
-    public GameOverException() {
+public class GameOverException extends RuntimeException {
+
+    GameOverException() {
         super("The game is already over, no more plays allowed.");
     }
     

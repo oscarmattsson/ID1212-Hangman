@@ -18,10 +18,10 @@ import oscarmat.kth.id1212.hangman.server.model.GameState;
  *   1. CLIENT sends desired [alias] for leaderboard followed by a new line.
  *      Only alphanumeric characters are allowed in the alias.
  *      ex. alias:oscarmat93\n
- *   2. SERVER responds with keyword [gamestate] followed by the state of 
+ *   2. SERVER responds with keyword [gamestate] followed by the state of
  *      the game as comma separated list of key-value pairs as described below
  *      and then ends with a new line.
- *     2.1 Keyword [wordstate] followed by state of the word, 
+ *     2.1 Keyword [wordstate] followed by state of the word,
  *         incomplete letter positions are represented by underscore ('_')
  *     2.2 Keyword [failedattempts] followed by the amount of failed attempts
  *         on a word performed so far.
@@ -51,15 +51,8 @@ import oscarmat.kth.id1212.hangman.server.model.GameState;
 class ClientHandler implements Runnable {
 
     private static final String ALIAS = "alias";
-    private static final String GAMESTATE = "gamestate";
-    private static final String WORDSTATE = "wordstate";
-    private static final String FAILEDATTEMPTS = "failedattempts";
-    private static final String MAXATTEMPTS = "maxattempts";
     private static final String LETTER = "letter";
     private static final String WORD = "word";
-    private static final String GAMEOVER = "gameover";
-    private static final String WON = "won";
-    private static final String LOST = "lost";
     private static final String NEWGAME = "newgame";
     private static final String END = "end";
     
@@ -97,13 +90,26 @@ class ClientHandler implements Runnable {
         try {
             reciever = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             sender = new PrintWriter(clientSocket.getOutputStream(),false);
+
+            while(running) {
+
+            }
         }
         catch(IOException e) {
             throw new UncheckedIOException(e);
         }
-        while(running) {
-            
+    }
+
+    private class MessageParser {
+
+        String message;
+
+        MessageParser(String message) {
+            this.message = message;
         }
+
+
+
     }
     
 }

@@ -53,16 +53,26 @@ public class Game implements GameState {
      * @return true if the game is either won or lost, false otherwise.
      */
     @Override
-    public boolean isGameLost() {
-        return getFailedAttempts() == getMaximumAllowedAttempts();
+    public boolean isGameLost() throws GameNotOverException {
+        if(isGameOver()) {
+            return getFailedAttempts() == getMaximumAllowedAttempts();
+        }
+        else {
+            throw new GameNotOverException();
+        }
     }
     
     /**
      * @return true if the game has been won, false otherwise.
      */
     @Override
-    public boolean isGameWon() {
-        return word.getWord().equals(word.getClientWord());
+    public boolean isGameWon() throws GameNotOverException {
+        if(isGameOver()) {
+            return word.getWord().equals(word.getClientWord());
+        }
+        else {
+            throw new GameNotOverException();
+        }
     }
     
     /**
@@ -79,12 +89,17 @@ public class Game implements GameState {
      * @param guess Guessed letter.
      * @return true if letter is correct, false otherwise.
      */
-    public GameState play(char guess) {
-        boolean isCorrect = word.checkLetter(guess);
-        if(!isCorrect) {
-            attempts++;
+    public GameState play(char guess) throws GameOverException {
+        if(!isGameOver()) {
+            boolean isCorrect = word.checkLetter(guess);
+            if (!isCorrect) {
+                attempts++;
+            }
+            return this;
         }
-        return this;
+        else {
+            throw new GameOverException();
+        }
     }
     
     /**
@@ -93,12 +108,17 @@ public class Game implements GameState {
      * @param guess Guessed word.
      * @return true if word is correct, false otherwise.
      */
-    public GameState play(String guess) {
-        boolean isCorrect = word.checkWord(guess);
-        if(!isCorrect) {
-            attempts++;
+    public GameState play(String guess) throws GameOverException {
+        if(!isGameOver()) {
+            boolean isCorrect = word.checkWord(guess);
+            if (!isCorrect) {
+                attempts++;
+            }
+            return this;
         }
-        return this;
+        else {
+            throw new GameOverException();
+        }
     }
     
 }

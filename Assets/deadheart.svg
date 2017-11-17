@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="heart.svg"
+   sodipodi:docname="deadheart.svg"
    inkscape:export-filename="C:\Users\oscar\Documents\GitHub\Hangman\Assets\heart.png"
    inkscape:export-xdpi="5.6584764"
    inkscape:export-ydpi="5.6584764">
@@ -40,8 +40,8 @@
      fit-margin-right="5"
      fit-margin-bottom="5"
      fit-margin-left="5"
-     inkscape:window-width="1920"
-     inkscape:window-height="1000"
+     inkscape:window-width="2880"
+     inkscape:window-height="1541"
      inkscape:window-x="-11"
      inkscape:window-y="-11"
      inkscape:window-maximized="1">
@@ -89,10 +89,13 @@
      id="layer1"
      transform="translate(-4.4961508,-39.106859)">
     <path
-       style="fill:#d40000;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#434343;stroke:#737373;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
        d="m 99.785712,61.142861 c 0,0 50.292348,-29.38184 80.130948,0 29.8386,29.38184 -80.130949,135.315469 -80.130949,135.315469 0,0 -113.560355,-104.188639 -80.13095,-135.315469 33.429405,-31.12683 96.761899,24.946428 96.761899,24.946428 z"
        id="path3711"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cscscc" />
+       sodipodi:nodetypes="cscscc"
+       inkscape:export-filename="C:\Users\oscar\Documents\GitHub\Hangman\src\oscarmat\kth\id1212\hangman\client\view\deadheart.png"
+       inkscape:export-xdpi="5.6584764"
+       inkscape:export-ydpi="5.6584764" />
   </g>
 </svg>
