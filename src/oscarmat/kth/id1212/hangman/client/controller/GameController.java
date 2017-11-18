@@ -10,10 +10,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -23,7 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import oscarmat.kth.id1212.hangman.client.net.NetHandler;
 import oscarmat.kth.id1212.hangman.client.view.components.HeartComponent;
-import oscarmat.kth.id1212.hangman.common.GameState;
+import oscarmat.kth.id1212.hangman.common.GameDTO;
+
+import javax.swing.*;
 
 /**
  *
@@ -40,29 +43,48 @@ public class GameController implements Initializable {
     @FXML private Label wordLabel;
     @FXML private Label statusLabel;
 
-    HeartComponent[] hearts;
     NetHandler net;
 
     private final GameController self;
 
+    /**
+     * Set up controller for game view.
+     * @param net Connection to server.
+     */
     public GameController(NetHandler net) {
         self = this;
         self.net = net;
     }
 
+    /**
+     * Entry point for the game view.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         newGame();
         guessLetterButton.setOnAction(self::guessLetter);
         guessWordButton.setOnAction(self::guessWord);
+        guessLetterField.textProperty().addListener(this::letterChangeListener);
+    }
+
+    /**
+     * Set the letter field to the last character in the
+     * String when the field value is changed.
+     */
+    private void letterChangeListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        StringProperty property = (StringProperty)observable;
+        int pos = newValue.length() - 1;
+        if(pos >= 0) {
+            property.setValue(newValue.substring(pos - 1, pos));
+        }
     }
 
     private void newGame() {
-        Task<GameState> newGameTask = new Task<GameState>() {
+        Task<GameDTO> newGameTask = new Task<GameDTO>() {
             @Override
-            protected GameState call() throws Exception {
+            protected GameDTO call() throws Exception {
                 updateMessage("Starting new game...");
-                GameState gameState = net.newGame();
+                GameDTO gameState = net.newGame();
                 updateMessage("Game started!");
                 return gameState;
             }
@@ -78,33 +100,6 @@ public class GameController implements Initializable {
 
     private void onNewGame(WorkerStateEvent event) {
         updateState(event);
-        updateScore();
-    }
-
-    private void updateScore() {
-        Task<Integer> fetchScoreTask = new Task<Integer>() {
-            @Override
-            protected Integer call() throws Exception {
-                updateMessage("Fetching score...");
-                int score =  net.getScore();
-                updateMessage("Updating score...");
-                return score;
-            }
-        };
-
-        scoreLabel.textProperty().bind(fetchScoreTask.messageProperty());
-        fetchScoreTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-                scoreLabel.textProperty().unbind();
-
-                int score = (int)event.getSource().getValue();
-                scoreLabel.setText(Integer.toString(score));
-            }
-        });
-
-        Thread thread = new Thread(fetchScoreTask);
-        thread.start();
     }
 
     /**
@@ -113,13 +108,14 @@ public class GameController implements Initializable {
      */
     private void guessLetter(ActionEvent event) {
         String word = guessLetterField.getText();
+        guessLetterField.setText("");
         if(word.length() > 0) {
-            Task<GameState> guessLetterTask = new Task<GameState>() {
+            Task<GameDTO> guessLetterTask = new Task<GameDTO>() {
                 @Override
-                protected GameState call() throws Exception {
+                protected GameDTO call() throws Exception {
                     char letter = word.charAt(0);
                     updateMessage("Waiting...");
-                    GameState gameState = net.guessLetter(letter);
+                    GameDTO gameState = net.guessLetter(letter);
                     updateMessage("Finished!");
                     return gameState;
                 }
@@ -139,12 +135,13 @@ public class GameController implements Initializable {
      */
     private void guessWord(ActionEvent event) {
         String word = guessWordField.getText();
+        guessWordField.setText("");
         if(word.length() > 0) {
-            Task<GameState> guessWordTask = new Task<GameState>() {
+            Task<GameDTO> guessWordTask = new Task<GameDTO>() {
                 @Override
-                protected GameState call() throws Exception {
+                protected GameDTO call() throws Exception {
                     updateMessage("Waiting...");
-                    GameState gameState = net.guessWord(word);
+                    GameDTO gameState = net.guessWord(word);
                     updateMessage("Finished!");
                     return gameState;
                 }
@@ -159,7 +156,8 @@ public class GameController implements Initializable {
     }
 
     private void updateState(WorkerStateEvent event) {
-        GameState gameState = (GameState)event.getSource().getValue();
+        GameDTO gameState = (GameDTO)event.getSource().getValue();
+
         if(gameState.isGameOver()) {
             if(gameState.isGameWon()) {
                 // TODO: Show win screen
@@ -169,29 +167,31 @@ public class GameController implements Initializable {
             }
         }
         else {
-            int failed = gameState.getFailedAttempts();
             int max = gameState.getMaximumAllowedAttempts();
+            int failed = gameState.getFailedAttempts();
+            updateHearts(max, failed);
 
-            if(heartBox.getChildren().isEmpty()) {
-                for (int i = max; i > failed; i--) {
-                    HeartComponent heart = new HeartComponent();
-                    heartBox.getChildren().add(heart);
-                }
-                for (int i = failed; i > 0; i--) {
-                    HeartComponent heart = new HeartComponent();
-                    heart.setDeadProperty(true);
-                    heartBox.getChildren().add(heart);
-                }
-            }
-            else {
-                List<Node> hearts = heartBox.getChildren();
-                for(int i = max - 1; i > (max - 1) - failed; i--) {
-                    ((HeartComponent)hearts.get(i)).setDeadProperty(true);
-                }
-            }
+            scoreLabel.setText(Integer.toString(gameState.getScore()));
             wordLabel.setText(gameState.getWordState());
-            System.out.println(gameState.getWordState());
-            System.out.println(gameState.getFailedAttempts());
+        }
+    }
+
+    /**
+     * Update the amount of dead hearts.
+     * @param total Total amount of hearts.
+     * @param dead Amount of dead hearts.
+     */
+    private void updateHearts(int total, int dead) {
+        List<Node> hearts = heartBox.getChildren();
+
+        if(hearts.isEmpty()) {
+            for (int i = 0; i < total; i++) {
+                HeartComponent heart = new HeartComponent();
+                heartBox.getChildren().add(heart);
+            }
+        }
+        for(int i = total - 1; i > (total - 1) - dead; i--) {
+            ((HeartComponent)hearts.get(i)).setDeadProperty(true);
         }
     }
 }

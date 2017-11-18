@@ -5,7 +5,6 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 
-import oscarmat.kth.id1212.hangman.common.GameState;
 import oscarmat.kth.id1212.hangman.common.Message;
 import oscarmat.kth.id1212.hangman.server.controller.ClientController;
 

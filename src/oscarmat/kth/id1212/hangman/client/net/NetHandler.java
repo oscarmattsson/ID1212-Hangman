@@ -1,10 +1,9 @@
 package oscarmat.kth.id1212.hangman.client.net;
 
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import oscarmat.kth.id1212.hangman.common.GameState;
+import oscarmat.kth.id1212.hangman.common.GameDTO;
 import oscarmat.kth.id1212.hangman.common.Message;
 
 import java.io.*;
@@ -46,17 +45,17 @@ public class NetHandler {
         thread.start();
     }
 
-    public GameState newGame() {
+    public GameDTO newGame() {
         send(builder.newGame());
         return receiveGameState();
     }
 
-    public GameState guessLetter(char letter) {
+    public GameDTO guessLetter(char letter) {
         send(builder.guessLetter(letter));
         return receiveGameState();
     }
 
-    public GameState guessWord(String word) {
+    public GameDTO guessWord(String word) {
         send(builder.guessWord(word));
         return receiveGameState();
     }
@@ -87,9 +86,9 @@ public class NetHandler {
      * Wait for a message from the server.
      * @return Message containing new state of the game.
      */
-    private GameState receiveGameState() {
+    private GameDTO receiveGameState() {
         try {
-            return (GameState)receiver.readObject();
+            return (GameDTO)receiver.readObject();
         }
         catch(IOException e) {
             throw new UncheckedIOException(e);

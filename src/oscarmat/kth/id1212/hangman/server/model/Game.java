@@ -5,7 +5,8 @@
  */
 package oscarmat.kth.id1212.hangman.server.model;
 
-import oscarmat.kth.id1212.hangman.common.GameState;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Represents an instance of a hangman game.
@@ -13,11 +14,12 @@ import oscarmat.kth.id1212.hangman.common.GameState;
  * and the word selected for the game.
  * @author oscar
  */
-public class Game implements GameState {
+public class Game {
     
     private GameWord word;
     private int attempts;
-    
+    private HashMap<String, Boolean> guesses;
+
     /**
      * Create a new game instance with a random word.
      * @param wordList List of potential words.
@@ -25,12 +27,12 @@ public class Game implements GameState {
     public Game(String[] wordList) {
         attempts = 0;
         word = new GameWord(wordList);
+        guesses = new HashMap<>();
     }
     
     /**
      * @return Get maximum amount of allowed attempts.
      */
-    @Override
     public int getMaximumAllowedAttempts() {
         return word.getLength();
     }
@@ -38,7 +40,6 @@ public class Game implements GameState {
     /**
      * @return Get current amount of failed attempts.
      */
-    @Override
     public int getFailedAttempts() {
         return attempts;
     }
@@ -46,7 +47,6 @@ public class Game implements GameState {
     /**
      * @return Current state of guessed word.
      */
-    @Override
     public String getWordState() {
         return word.getClientWord();
     }
@@ -54,7 +54,6 @@ public class Game implements GameState {
     /**
      * @return true if the game is either won or lost, false otherwise.
      */
-    @Override
     public boolean isGameLost() {
         return getFailedAttempts() == getMaximumAllowedAttempts();
     }
@@ -62,7 +61,6 @@ public class Game implements GameState {
     /**
      * @return true if the game has been won, false otherwise.
      */
-    @Override
     public boolean isGameWon() {
         return word.getWord().equals(word.getClientWord());
     }
@@ -70,9 +68,12 @@ public class Game implements GameState {
     /**
      * @return true if the game is either won or lost, false otherwise.
      */
-    @Override
     public boolean isGameOver() {
         return isGameLost() || isGameWon();
+    }
+
+    public HashMap<String, Boolean> getGuesses() {
+        return guesses;
     }
     
     /**
@@ -81,13 +82,14 @@ public class Game implements GameState {
      * @param guess Guessed letter.
      * @return true if letter is correct, false otherwise.
      */
-    public GameState play(char guess) throws GameOverException {
+    public boolean play(char guess) throws GameOverException {
         if(!isGameOver()) {
             boolean isCorrect = word.checkLetter(guess);
             if (!isCorrect) {
                 attempts++;
             }
-            return this;
+            guesses.put(Character.toString(guess), isCorrect);
+            return isCorrect;
         }
         else {
             throw new GameOverException();
@@ -95,18 +97,19 @@ public class Game implements GameState {
     }
     
     /**
-     * Check if submmitted word is correct and adjust
+     * Check if submitted word is correct and adjust
      * the game state accordingly.
      * @param guess Guessed word.
      * @return true if word is correct, false otherwise.
      */
-    public GameState play(String guess) throws GameOverException {
+    public boolean play(String guess) throws GameOverException {
         if(!isGameOver()) {
             boolean isCorrect = word.checkWord(guess);
             if (!isCorrect) {
                 attempts++;
             }
-            return this;
+            guesses.put(guess, isCorrect);
+            return isCorrect;
         }
         else {
             throw new GameOverException();

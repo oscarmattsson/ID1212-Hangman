@@ -3,7 +3,7 @@ package oscarmat.kth.id1212.hangman.server.controller;
 
 import oscarmat.kth.id1212.hangman.server.model.Game;
 import oscarmat.kth.id1212.hangman.server.model.GameOverException;
-import oscarmat.kth.id1212.hangman.common.GameState;
+import oscarmat.kth.id1212.hangman.common.GameDTO;
 
 /**
  * Controller for game instances for a single client.
@@ -29,8 +29,8 @@ public class ClientController {
     /**
      * @return The current state of the game.
      */
-    public GameState getGameState() {
-        return game;
+    public GameDTO getGameState() {
+        return getDTO();
     }
 
     /**
@@ -45,32 +45,49 @@ public class ClientController {
      * word list.
      * @return State of the new game.
      */
-    public GameState newGame() {
+    public GameDTO newGame() {
         if(game != null && !game.isGameOver()) {
             score--;
         }
-        return game = new Game(wordList);
+
+        game = new Game(wordList);
+        return getDTO();
     }
     
     /**
      * Perform a guess in the game with a single letter.
      * @param guess The guessed letter.
      * @return The updated state of the game.
+     * @throws GameOverException If trying to play after game is over.
      */
-    public GameState play(char guess) throws GameOverException {
-        if(game.isGameOver()) {
-            if(game.isGameWon()) score++;
-            else if(game.isGameLost()) score--;
-        }
-        return game.play(guess);
+    public GameDTO play(char guess) throws GameOverException {
+        game.play(guess);
+        if(game.isGameOver()) updateScore();
+        return getDTO();
     }
-    
+
     /**
      * Perform a guess in the game with a whole word.
      * @param guess The guessed word.
      * @return The updated state of the game.
+     * @throws GameOverException If trying to play after game is over.
      */
-    public GameState play(String guess) {
-        return game.play(guess);
+    public GameDTO play(String guess) throws GameOverException {
+        game.play(guess);
+        if(game.isGameOver()) updateScore();
+        return getDTO();
+    }
+
+    private void updateScore() {
+        if(game.isGameLost()) {
+            score--;
+        }
+        else if(game.isGameWon()) {
+            score++;
+        }
+    }
+
+    private GameDTO getDTO() {
+        return new GameDTO(game, score);
     }
 }

@@ -65,7 +65,7 @@ public class GameWord implements Serializable {
      */
     boolean checkLetter(char guess) {
         guess = Character.toUpperCase(guess);
-        if(clientWord.indexOf(guess) != -1) {
+        if(clientWord.indexOf(guess) == -1) {
             if(word.indexOf(guess) != -1) {
                 addCharacter(guess);
                 return true;
