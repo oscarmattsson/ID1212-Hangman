@@ -12,7 +12,7 @@ import oscarmat.kth.id1212.hangman.server.net.GameServer;
  * Start up a hangman game server.
  * @author oscar
  */
-public class Startup {
+public class Server {
 
     private static final int DEFAULT_PORT = 1337;
     

@@ -5,6 +5,8 @@
  */
 package oscarmat.kth.id1212.hangman.server.model;
 
+import oscarmat.kth.id1212.hangman.common.GameState;
+
 /**
  * Represents an instance of a hangman game.
  * Controls the remaining amount of attempts
@@ -21,7 +23,7 @@ public class Game implements GameState {
      * @param wordList List of potential words.
      */
     public Game(String[] wordList) {
-        attempts = 1;
+        attempts = 0;
         word = new GameWord(wordList);
     }
     
@@ -53,26 +55,16 @@ public class Game implements GameState {
      * @return true if the game is either won or lost, false otherwise.
      */
     @Override
-    public boolean isGameLost() throws GameNotOverException {
-        if(isGameOver()) {
-            return getFailedAttempts() == getMaximumAllowedAttempts();
-        }
-        else {
-            throw new GameNotOverException();
-        }
+    public boolean isGameLost() {
+        return getFailedAttempts() == getMaximumAllowedAttempts();
     }
     
     /**
      * @return true if the game has been won, false otherwise.
      */
     @Override
-    public boolean isGameWon() throws GameNotOverException {
-        if(isGameOver()) {
-            return word.getWord().equals(word.getClientWord());
-        }
-        else {
-            throw new GameNotOverException();
-        }
+    public boolean isGameWon() {
+        return word.getWord().equals(word.getClientWord());
     }
     
     /**

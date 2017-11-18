@@ -3,7 +3,7 @@ package oscarmat.kth.id1212.hangman.server.controller;
 
 import oscarmat.kth.id1212.hangman.server.model.Game;
 import oscarmat.kth.id1212.hangman.server.model.GameOverException;
-import oscarmat.kth.id1212.hangman.server.model.GameState;
+import oscarmat.kth.id1212.hangman.common.GameState;
 
 /**
  * Controller for game instances for a single client.

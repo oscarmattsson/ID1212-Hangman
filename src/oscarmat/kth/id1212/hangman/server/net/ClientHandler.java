@@ -3,7 +3,9 @@ package oscarmat.kth.id1212.hangman.server.net;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
+import oscarmat.kth.id1212.hangman.common.GameState;
 import oscarmat.kth.id1212.hangman.common.Message;
 import oscarmat.kth.id1212.hangman.server.controller.ClientController;
 
@@ -17,8 +19,6 @@ class ClientHandler implements Runnable {
     private final GameServer server;
     private final Socket clientSocket;
 
-    private MessageBuilder builder;
-    
     private final ClientController controller;
     private boolean running;
     
@@ -35,7 +35,6 @@ class ClientHandler implements Runnable {
         
         controller = new ClientController(wordList);
         running = true;
-        builder = new MessageBuilder();
     }
     
     /**
@@ -48,12 +47,41 @@ class ClientHandler implements Runnable {
             ObjectInputStream receiver = new ObjectInputStream(clientSocket.getInputStream());
             ObjectOutputStream sender = new ObjectOutputStream(clientSocket.getOutputStream());
 
-            controller.newGame();
+            String user = clientSocket.getInetAddress().toString();
 
             while(running) {
                 Message message = (Message)receiver.readObject();
-                sender.writeObject(builder.gameState(controller.getGameState()));
+                switch (message.getType()) {
+                    case NEWGAME:
+                        sender.writeObject(controller.newGame());
+                        System.out.println(user + ": Started new game.");
+                        break;
+                    case LETTER:
+                        char letter = (char)message.getValue();
+                        sender.writeObject(controller.play(letter));
+                        System.out.println(user + ": Guessed the letter '" + letter + "'");
+                        break;
+                    case WORD:
+                        String word = (String)message.getValue();
+                        sender.writeObject(controller.play(word));
+                        System.out.println(user + ": Guessed the word '" + word + "'");
+                        break;
+                    case SCORE:
+                        int score = controller.getScore();
+                        sender.writeInt(score);
+                        sender.flush();
+                        System.out.println(user + ": Requested score, returning " + score);
+                        break;
+                    case EXIT:
+                        clientSocket.close();
+                        System.out.println(user + ": Disconnected.");
+                        this.running = false;
+                        break;
+                }
             }
+        }
+        catch(SocketException e) {
+            System.out.println(clientSocket.getInetAddress() + ": Error, closing socket.");
         }
         catch(IOException e) {
             throw new UncheckedIOException(e);

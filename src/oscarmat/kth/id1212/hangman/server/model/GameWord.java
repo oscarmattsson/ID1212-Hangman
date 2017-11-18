@@ -5,6 +5,7 @@
  */
 package oscarmat.kth.id1212.hangman.server.model;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Random;
  * 
  * @author oscar
  */
-public class GameWord {
+public class GameWord implements Serializable {
     
     private final String word;
     private String clientWord = "";
@@ -27,7 +28,7 @@ public class GameWord {
      */
     GameWord(String[] wordList) {
         Random r = new Random();
-        word = wordList[r.nextInt(wordList.length)];
+        word = wordList[r.nextInt(wordList.length)].toUpperCase();
         for(int i = 0; i < word.length(); i++) {
             clientWord += "_";
         }
@@ -63,6 +64,7 @@ public class GameWord {
      * @return true if the letter exists in the word, otherwise false.
      */
     boolean checkLetter(char guess) {
+        guess = Character.toUpperCase(guess);
         if(clientWord.indexOf(guess) != -1) {
             if(word.indexOf(guess) != -1) {
                 addCharacter(guess);
@@ -85,6 +87,7 @@ public class GameWord {
      * @return true if the guessed word is correct, otherwise false.
      */
     boolean checkWord(String guess) {
+        guess = guess.toUpperCase();
         if(word.equals(guess)) {
             clientWord = word;
             return true;

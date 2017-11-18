@@ -12,6 +12,15 @@ public class Message<T> implements Serializable {
     private final T value;
 
     /**
+     * Create a new primitive message.
+     * @param type Type of message being sent.
+     */
+    public Message(MessageType type) {
+        this.type = type;
+        this.value = null;
+    }
+
+    /**
      * Create a new message.
      * @param type Type of message being sent.
      * @param value Value of the message.
