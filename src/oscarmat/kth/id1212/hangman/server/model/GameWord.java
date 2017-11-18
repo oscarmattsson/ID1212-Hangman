@@ -29,6 +29,7 @@ public class GameWord implements Serializable {
     GameWord(String[] wordList) {
         Random r = new Random();
         word = wordList[r.nextInt(wordList.length)].toUpperCase();
+        System.out.println("Word: " + word);
         for(int i = 0; i < word.length(); i++) {
             clientWord += "_";
         }
@@ -105,10 +106,9 @@ public class GameWord implements Serializable {
     private void addCharacter(char c) {
         String tempWord = word;
         StringBuilder newClientWord = new StringBuilder(clientWord);
-        int i;
-        while((i = tempWord.indexOf(c)) != -1) {
-            newClientWord.setCharAt(i, c);
-            tempWord = tempWord.substring(i+1);
+        int index = 0;
+        while((index = tempWord.indexOf(c, index)) != -1) {
+            newClientWord.setCharAt(index++, c);
         }
         clientWord = newClientWord.toString();
     }

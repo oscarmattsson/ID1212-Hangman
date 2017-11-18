@@ -22,6 +22,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -29,13 +32,15 @@ import oscarmat.kth.id1212.hangman.client.net.NetHandler;
 import oscarmat.kth.id1212.hangman.client.view.components.HeartComponent;
 import oscarmat.kth.id1212.hangman.common.GameDTO;
 
+import javax.swing.event.ChangeEvent;
+
 /**
  *
  * @author oscar
  */
 public class GameController implements Initializable {
 
-    @FXML private HBox heartBox;
+    @FXML private FlowPane heartBox;
     @FXML private VBox guessBox;
     @FXML private Button guessLetterButton;
     @FXML private Button guessWordButton;
@@ -66,6 +71,33 @@ public class GameController implements Initializable {
         newGame();
         guessLetterButton.setOnAction(self::guessLetter);
         guessWordButton.setOnAction(self::guessWord);
+
+        guessLetterField.setOnKeyPressed(self::onLetterFieldKeyPress);
+        guessWordField.setOnKeyPressed(self::onWordFieldKeyPress);
+
+        guessLetterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.length() > 1) {
+                ((StringProperty) observable).setValue(newValue.substring(1, 2));
+            }
+        });
+    }
+
+    private void onLetterFieldKeyPress(KeyEvent event) {
+        if(event.getCode() == KeyCode.ENTER) {
+            guessLetterButton.fire();
+        }
+        else if(event.getCode() == KeyCode.TAB) {
+            guessWordField.requestFocus();
+        }
+    }
+
+    private void onWordFieldKeyPress(KeyEvent event) {
+        if(event.getCode() == KeyCode.ENTER) {
+            guessWordButton.fire();
+        }
+        else if(event.getCode() == KeyCode.TAB) {
+            guessLetterField.requestFocus();
+        }
     }
 
     private void newGame() {
