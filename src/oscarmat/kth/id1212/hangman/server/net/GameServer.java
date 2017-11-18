@@ -30,7 +30,7 @@ public class GameServer {
     public void start(int port) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            System.out.println("Server has started.");
+            System.out.println("Server has started on port " + port + ".");
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println(clientSocket.getInetAddress().getHostAddress() + " has connected.");
