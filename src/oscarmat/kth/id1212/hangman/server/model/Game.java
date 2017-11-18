@@ -6,7 +6,7 @@
 package oscarmat.kth.id1212.hangman.server.model;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Represents an instance of a hangman game.
@@ -18,7 +18,7 @@ public class Game {
     
     private GameWord word;
     private int attempts;
-    private HashMap<String, Boolean> guesses;
+    private Map<String, Boolean> guesses;
 
     /**
      * Create a new game instance with a random word.
@@ -72,7 +72,7 @@ public class Game {
         return isGameLost() || isGameWon();
     }
 
-    public HashMap<String, Boolean> getGuesses() {
+    public Map<String, Boolean> getGuesses() {
         return guesses;
     }
     

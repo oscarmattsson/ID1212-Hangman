@@ -77,6 +77,7 @@ class ClientHandler implements Runnable {
                         this.running = false;
                         break;
                 }
+                sender.reset();
             }
         }
         catch(SocketException e) {

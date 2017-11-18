@@ -5,6 +5,7 @@ import oscarmat.kth.id1212.hangman.server.model.Game;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents the state of a game instance.
@@ -18,7 +19,7 @@ public class GameDTO implements Serializable {
     private final boolean isGameOver;
     private final boolean isGameWon;
     private final boolean isGameLost;
-    private final HashMap<String, Boolean> guesses;
+    private final Map<String, Boolean> guesses;
 
     private int score;
 
@@ -78,7 +79,7 @@ public class GameDTO implements Serializable {
     /**
      * @return Guesses so far and their results.
      */
-    public HashMap<String, Boolean> getGuesses() {
+    public Map<String, Boolean> getGuesses() {
         return guesses;
     }
 

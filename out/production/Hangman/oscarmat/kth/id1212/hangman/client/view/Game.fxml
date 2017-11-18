@@ -6,85 +6,120 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="root" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+
+<GridPane styleClass="root" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <Label fx:id="titleLabel" text="Guess the word!" textFill="WHITE">
-         <font>
-            <Font size="32.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </VBox.margin>
-      </Label>
-      <Label fx:id="wordLabel" textFill="#eeeeee">
-         <font>
-            <Font size="22.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </VBox.margin>
-      </Label>
-      <HBox fx:id="heartBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </VBox.margin>
-      </HBox>
-      <GridPane alignment="CENTER" maxHeight="99.0" maxWidth="560.0" minHeight="54.0" prefHeight="54.0" prefWidth="560.0">
+      <GridPane alignment="TOP_CENTER" styleClass="scroll-pane" GridPane.columnIndex="1">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="305.0" minWidth="10.0" prefWidth="280.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="371.0" minWidth="10.0" prefWidth="280.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="63.0" minHeight="10.0" prefHeight="63.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="384.0" minHeight="10.0" prefHeight="337.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TextField fx:id="guessLetterField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="125.0" promptText="Letter" styleClass="textfield" GridPane.halignment="RIGHT">
-               <GridPane.margin>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+               <content>
+                  <VBox fx:id="guessBox" alignment="TOP_CENTER" maxWidth="1.7976931348623157E308">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <Label text="Guesses" textAlignment="CENTER" textFill="WHITE" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="root">
+         <children>
+            <Label fx:id="titleLabel" text="Guess the word!" textFill="WHITE">
+               <font>
+                  <Font size="32.0" />
+               </font>
+            </Label>
+            <Label fx:id="wordLabel" textFill="#eeeeee">
+               <font>
+                  <Font size="22.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <HBox fx:id="heartBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <GridPane alignment="CENTER" maxHeight="99.0" maxWidth="560.0" minHeight="54.0" prefHeight="54.0" prefWidth="560.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="305.0" minWidth="10.0" prefWidth="280.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="371.0" minWidth="10.0" prefWidth="280.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <TextField fx:id="guessLetterField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="125.0" promptText="Letter" styleClass="textfield" GridPane.halignment="RIGHT">
+                     <GridPane.margin>
+                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Button fx:id="guessLetterButton" defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" text="Guess Letter" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+                     <GridPane.margin>
+                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                     </GridPane.margin>
+                     <styleClass>
+                        <String fx:value="interactable" />
+                        <String fx:value="button" />
+                     </styleClass>
+                  </Button>
+               </children>
+            </GridPane>
+            <TextField fx:id="guessWordField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="256.0" promptText="Word" styleClass="textfield">
+               <VBox.margin>
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-               </GridPane.margin>
+               </VBox.margin>
             </TextField>
-            <Button fx:id="guessLetterButton" defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" text="Guess Letter" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT">
-               <GridPane.margin>
+            <Button fx:id="guessWordButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="39.0" prefWidth="256.0" text="Guess Word" textFill="WHITE">
+               <VBox.margin>
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-               </GridPane.margin>
+               </VBox.margin>
                <styleClass>
                   <String fx:value="interactable" />
                   <String fx:value="button" />
                </styleClass>
             </Button>
+            <GridPane alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="scoreLabel" textFill="WHITE" GridPane.halignment="CENTER" />
+                  <Label fx:id="statusLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+               </children>
+            </GridPane>
          </children>
-      </GridPane>
-      <TextField fx:id="guessWordField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="256.0" promptText="Word" styleClass="textfield">
-         <VBox.margin>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-         </VBox.margin>
-      </TextField>
-      <Button fx:id="guessWordButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="39.0" prefWidth="256.0" text="Guess Word" textFill="WHITE">
-         <VBox.margin>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-         </VBox.margin>
-         <styleClass>
-            <String fx:value="interactable" />
-            <String fx:value="button" />
-         </styleClass></Button>
-      <GridPane alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <Label fx:id="scoreLabel" textFill="WHITE" GridPane.halignment="CENTER" />
-            <Label fx:id="statusLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-         </children>
-      </GridPane>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
    </children>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-   </padding>
-</VBox>
+</GridPane>

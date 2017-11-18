@@ -8,6 +8,7 @@ package oscarmat.kth.id1212.hangman.client.controller;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.StringProperty;
@@ -22,11 +23,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import oscarmat.kth.id1212.hangman.client.net.NetHandler;
 import oscarmat.kth.id1212.hangman.client.view.components.HeartComponent;
 import oscarmat.kth.id1212.hangman.common.GameDTO;
-
-import javax.swing.*;
 
 /**
  *
@@ -35,6 +36,7 @@ import javax.swing.*;
 public class GameController implements Initializable {
 
     @FXML private HBox heartBox;
+    @FXML private VBox guessBox;
     @FXML private Button guessLetterButton;
     @FXML private Button guessWordButton;
     @FXML private TextField guessLetterField;
@@ -64,19 +66,6 @@ public class GameController implements Initializable {
         newGame();
         guessLetterButton.setOnAction(self::guessLetter);
         guessWordButton.setOnAction(self::guessWord);
-        guessLetterField.textProperty().addListener(this::letterChangeListener);
-    }
-
-    /**
-     * Set the letter field to the last character in the
-     * String when the field value is changed.
-     */
-    private void letterChangeListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        StringProperty property = (StringProperty)observable;
-        int pos = newValue.length() - 1;
-        if(pos >= 0) {
-            property.setValue(newValue.substring(pos - 1, pos));
-        }
     }
 
     private void newGame() {
@@ -99,6 +88,7 @@ public class GameController implements Initializable {
     }
 
     private void onNewGame(WorkerStateEvent event) {
+        heartBox.getChildren().clear();
         updateState(event);
     }
 
@@ -159,19 +149,17 @@ public class GameController implements Initializable {
         GameDTO gameState = (GameDTO)event.getSource().getValue();
 
         if(gameState.isGameOver()) {
-            if(gameState.isGameWon()) {
-                // TODO: Show win screen
-            }
-            else if(gameState.isGameLost()) {
-                // TODO: Show lose screen
-            }
+            newGame();
         }
         else {
             int max = gameState.getMaximumAllowedAttempts();
             int failed = gameState.getFailedAttempts();
             updateHearts(max, failed);
 
-            scoreLabel.setText(Integer.toString(gameState.getScore()));
+            Map<String, Boolean> guesses = gameState.getGuesses();
+            updateGuesses(guesses);
+
+            scoreLabel.setText("Score: " + Integer.toString(gameState.getScore()));
             wordLabel.setText(gameState.getWordState());
         }
     }
@@ -185,6 +173,7 @@ public class GameController implements Initializable {
         List<Node> hearts = heartBox.getChildren();
 
         if(hearts.isEmpty()) {
+            hearts.clear();
             for (int i = 0; i < total; i++) {
                 HeartComponent heart = new HeartComponent();
                 heartBox.getChildren().add(heart);
@@ -192,6 +181,20 @@ public class GameController implements Initializable {
         }
         for(int i = total - 1; i > (total - 1) - dead; i--) {
             ((HeartComponent)hearts.get(i)).setDeadProperty(true);
+        }
+    }
+
+    private void updateGuesses(Map<String, Boolean> guesses) {
+        guessBox.getChildren().clear();
+        for (Map.Entry<String, Boolean> entry : guesses.entrySet()) {
+            Label guessLabel = new Label();
+            guessLabel.setTextFill(entry.getValue() ? Color.LIME : Color.RED);
+
+            String guess = entry.getKey();
+            String result = (entry.getValue() ? "Correct" : "Wrong");
+            guessLabel.setText(guess + ", " + result);
+
+            guessBox.getChildren().add(guessLabel);
         }
     }
 }
